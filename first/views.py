@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import ListView, FormView, DetailView, CreateView, DeleteView, UpdateView
 from django.contrib.auth.views import LoginView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Todo
 from django.urls import reverse_lazy
 from django.utils.text import slugify
@@ -15,16 +16,11 @@ class Home(ListView):
     ordering = ("-created",)
 
 
-class DetailTodo(DetailView):
+class DetailTodo(LoginRequiredMixin, DetailView):
     template_name = "first/detail_todo.html"
     slug_field = "slug"
     slug_url_kwarg = "slug"
-
-    def get_queryset(self):
-        if self.request.user.is_authenticated:
-            return Todo.objects.filter(slug=self.kwargs['slug'])
-        else:
-            return Todo.objects.none()
+    model = Todo
 
 
 # class TodoCreate(FormView):
@@ -70,5 +66,3 @@ class EditTodo(UpdateView):
     fields = ('title',)
     template_name = "first/edit_todo.html"
     success_url = reverse_lazy("first:home")
-
-
