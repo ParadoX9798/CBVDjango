@@ -8,3 +8,9 @@ class Todo(models.Model):
 
     def __str__(self):
         return f'{self.title}'
+
+
+class Comment(models.Model):
+    todo = models.ForeignKey(Todo, on_delete=models.CASCADE, related_name="tcomment")
+    name = models.CharField(max_length=50)
+    body = models.TextField()

@@ -11,5 +11,19 @@
         <p class="card-body">{{ todo.title }}</p>
         <small class="card-footer">{{ todo.created }}</small>
     </div>
+    <div class="m-5">
+        <form action="" method="post">{% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Sent" class="btn btn-primary">
+        </form>
+
+    </div>
+    <hr>
+    {% for commnet in todo.tcomment.all %}
+        {{ commnet.name }}
+        {{ commnet.body }}
+        <br>
+        <hr>
+    {% endfor %}
 
 {% endblock content %}
