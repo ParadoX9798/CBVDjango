@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.views.generic import ListView, FormView, DetailView, CreateView, DeleteView
+from django.views.generic import ListView, FormView, DetailView, CreateView, DeleteView, UpdateView
+from django.contrib.auth.views import LoginView
 from .models import Todo
 from django.urls import reverse_lazy
 from django.utils.text import slugify
@@ -62,3 +63,12 @@ class DeleteTodo(DeleteView):
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, "todo deleted successfully", "danger")
         return super(DeleteTodo, self).delete(request, *args, **kwargs)
+
+
+class EditTodo(UpdateView):
+    model = Todo
+    fields = ('title',)
+    template_name = "first/edit_todo.html"
+    success_url = reverse_lazy("first:home")
+
+
