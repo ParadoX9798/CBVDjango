@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="card">
+        <h2 class="card-header">ID:{{ todo.id }}</h2>
+        <p class="card-body">{{ todo.title }}</p>
+        <small class="card-footer">{{ todo.created }}</small>
+    </div>
+
+{% endblock content %}
