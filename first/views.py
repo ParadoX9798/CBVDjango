@@ -1,22 +1,16 @@
 from django.shortcuts import render
 from django.views import View
 from django.views.generic.base import TemplateView
-from django.views.generic.list import ListView
-from django.views.generic.detail import DetailView
+from django.views.generic import ListView, FormView, DetailView
 from .models import Todo
-
-
-# class Home(TemplateView):
-#     template_name = "first/hello.html"
-#
-#     def get_context_data(self, **kwargs):
-#         contex = super().get_context_data(**kwargs)
-#         contex['todos'] = Todo.objects.all()
-#         return contex
+from .forms import TodoCreateForm
+from django.urls import reverse_lazy
+from django.utils.text import slugify
+from django.contrib import messages
 
 
 class Home(ListView):
-    template_name = "first/hello.html"
+    template_name = "first/home.html"
     model = Todo
     context_object_name = "todos"
     ordering = ("-created",)
@@ -32,3 +26,18 @@ class DetailTodo(DetailView):
             return Todo.objects.filter(slug=self.kwargs['slug'])
         else:
             return Todo.objects.none()
+
+
+class TodoCreate(FormView):
+    form_class = TodoCreateForm
+    template_name = "first/todo_create.html"
+    success_url = reverse_lazy("first:home")
+
+    def form_valid(self, form):
+        self.create_todo(form.cleaned_data)
+        return super().form_valid(form)
+
+    def create_todo(self, data):
+        todo = Todo(title=data['title'], slug=slugify(data['title']))
+        todo.save()
+        messages.success(self.request, "your todo added successfully", "success")
