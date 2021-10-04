@@ -1,9 +1,10 @@
 from django.shortcuts import render
-from django.views.generic import ListView, FormView, DetailView, CreateView
+from django.views.generic import ListView, FormView, DetailView, CreateView, DeleteView
 from .models import Todo
 from django.urls import reverse_lazy
 from django.utils.text import slugify
 from django.contrib import messages
+from django import forms
 
 
 class Home(ListView):
@@ -51,3 +52,13 @@ class TodoCreate(CreateView):
         todo.save()
         messages.success(self.request, "your todo added successfully", "success")
         return super().form_valid(form)
+
+
+class DeleteTodo(DeleteView):
+    template_name = "first/delete_todo.html"
+    model = Todo
+    success_url = reverse_lazy("first:home")
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, "todo deleted successfully", "danger")
+        return super(DeleteTodo, self).delete(request, *args, **kwargs)
